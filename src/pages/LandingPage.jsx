@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import Logo from '../components/Logo';
 
 const LandingPage = () => {
@@ -28,8 +28,8 @@ const styles = {
     margin: '10px',
     padding: '10px 20px',
     textDecoration: 'none',
-    backgroundColor: '#007bff',
-    color: '#fff',
+    backgroundColor: '#',
+    color: '#',
     borderRadius: '5px',
   },
 };

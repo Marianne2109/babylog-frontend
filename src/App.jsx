@@ -1,22 +1,28 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
+import LoginPage from './pages/Login';
+import SignupPage from './pages/Signup'
 import reactLogo from './assets/react.svg'
 import './App.css';
-import { useUserAuthContext} from './contexts/UserAuthContextProvider';
+
 
 function App() {
 
 
   return (
-    <div>
-      BabyLog
-    </div>
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+    </Routes>
+  );
+};
 
-  )
-}
 
 export default App
+
+
     // <>
     //   <div>
     //     <a href="https://vite.dev" target="_blank">
