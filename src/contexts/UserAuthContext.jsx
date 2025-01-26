@@ -1,7 +1,9 @@
 import { createContext, useContext, useState } from 'react';
 
+//create auth context
 const UserAuthContext = createContext();
 
+//context provider
 export const UserAuthContextProvider = ({ children }) => {
     const [userJwt, setUserJwt] = useState(null);
 
