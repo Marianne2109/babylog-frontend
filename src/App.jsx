@@ -1,4 +1,4 @@
-import { useEffect} from 'react'
+import { useEffect, useState} from 'react'
 import { Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/Login';
@@ -7,8 +7,9 @@ import './App.css';
 
 
 function App() {
+  const [count, setCount] = useState(0);
   useEffect(() => {
-    console.log('Hello from the App component');
+    console.log('Hello component');
     console.log(import.meta.env.VITE_API_URL);
   }, []);
 
