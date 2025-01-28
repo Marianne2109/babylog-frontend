@@ -1,20 +1,22 @@
-import React from 'react'
+import { useEffect} from 'react'
 import { Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/Login';
-import SignupPage from './pages/Signup'
-import reactLogo from './assets/react.svg'
+import RegisterPage from './pages/Register'
 import './App.css';
 
 
 function App() {
-
+  useEffect(() => {
+    console.log('Hello from the App component');
+    console.log(import.meta.env.VITE_API_URL);
+  }, []);
 
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/register" element={<RegisterPage />} />
     </Routes>
   );
 };

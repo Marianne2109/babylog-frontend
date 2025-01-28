@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const SignupPage = () => {
+const RegisterPage = () => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -25,7 +25,7 @@ const SignupPage = () => {
 
   return (
     <div style={styles.container}>
-      <h2>Sign Up</h2>
+      <h2>Register</h2>
       <form onSubmit={handleSubmit} style={styles.form}>
         <input
           type="text"
@@ -95,8 +95,8 @@ const styles = {
   },
   button: {
     padding: '10px 20px',
-    backgroundColor: '#',
-    color: '#',
+    backgroundColor: '#E9BA84',
+    color: '#372D3D',
     border: 'none',
     borderRadius: '5px',
     cursor: 'pointer',
@@ -112,4 +112,4 @@ const styles = {
   },
 };
 
-export default SignupPage;
+export default RegisterPage;
