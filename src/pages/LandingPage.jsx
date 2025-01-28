@@ -51,8 +51,3 @@ const styles = {
 
 export default LandingPage;
 
-// const LandingPage = () => {
-//   return <h1>Landing Page is Working!</h1>;
-// };
-
-// export default LandingPage;
