@@ -15,24 +15,47 @@ const RegisterPage = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
+  //handle form changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  //handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
-  };
-try{
-  console.log('Registering user...', formData);
 
-  set
-}
-  navigate('/login');
+    try{
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/register`, {
+        method: 'POST', 
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error Response:", errorText);
+        throw new Error("Oops! Something went wrong. Please try again later.");
+      }
+
+      const data = await response.json();
+      console.log("Success:", data);
+
+      //redirect to login page after successful registration
+      setSuccess('User registered successfully! Redirecting to login page...');
+      setTimeout(() => {
+        navigate('/login'); //redirect to login page after 2 seconds
+      }, 2000); 
+
+    } catch (error) {
+      setError(error.message);
+      console.error('Error:', error.message);
+    }
 };
-    
 
   return (
     <div style={styles.container}>
