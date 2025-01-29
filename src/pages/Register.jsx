@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; 
+
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -21,6 +25,13 @@ const RegisterPage = () => {
     setError(null);
     setSuccess(null);
   };
+try{
+  console.log('Registering user...', formData);
+
+  set
+}
+  navigate('/login');
+};
     
 
   return (
