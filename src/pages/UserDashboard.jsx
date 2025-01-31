@@ -80,7 +80,7 @@ export default function UserDashboard() {
     );
 };
 
-// Centralized CSS styles
+//CSS styles
 const styles = {
     container: {
         maxWidth: "800px",
