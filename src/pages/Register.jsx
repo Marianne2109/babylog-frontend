@@ -14,6 +14,7 @@ const RegisterPage = () => {
 
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   //handle form changes
   const handleChange = (e) => {
@@ -26,9 +27,10 @@ const RegisterPage = () => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+    setLoading(true);
 
     try{
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/register`, {
         method: 'POST', 
         headers: {
           'Content-Type': 'application/json',
@@ -37,13 +39,18 @@ const RegisterPage = () => {
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
+        const errorText = await response.json();
         console.error("Error Response:", errorText);
         throw new Error("Oops! Something went wrong. Please try again later.");
       }
 
       const data = await response.json();
       console.log("Success:", data);
+
+      //handle user token
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+      }
 
       //redirect to login page after successful registration
       setSuccess('User registered successfully! Redirecting to login page...');
@@ -54,6 +61,8 @@ const RegisterPage = () => {
     } catch (error) {
       setError(error.message);
       console.error('Error:', error.message);
+    } finally {
+      setLoading(false);
     }
 };
 

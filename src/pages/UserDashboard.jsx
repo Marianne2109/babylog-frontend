@@ -6,10 +6,11 @@ import { useChildContext } from "../contexts/ChildContext";
 export default function UserDashboard() {
     const navigate = useNavigate();
     const { currentUser } = useUserAuthContext(); //authenticated user
-    const {childProfiles, usersWithAccess} = useChildContext(); //child profiles and users with access
+    const {childProfiles, setChildProfiles} = useChildContext(); //child profiles and users with access
 
-    const [userChildren, setUserChildren] = useState([]); //children of the authenticated user
-
+    const [userChildren, setUserChildren] = useState([]); //children profiles of the authenticated user
+    const [loading, setLoading] = useState(true);   
+    const [error, setError] = useState(null);
     
     useEffect(() => {
         if (!currentUser) {
@@ -17,12 +18,46 @@ export default function UserDashboard() {
             return;
         }
         
+        //fetch from backend
+        const fetchChildren = async () => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/children`, {
+                    method: 'GET',
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${currentUser.jwt}`,   
+                    },
+                });
+
+                if(!response.ok) {
+                    throw new Error("An error occurred while fetching child profiles.");
+                }
+
+                const data = await response.json();
+                setChildProfiles(data); 
+            } catch (error) {
+                console.error("Error fetching child profiles:", error);
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchChildren();
+    }, [currentUser, navigate, setChildProfiles]);
+
+    useEffect(() => {
+        
         if (currentUser && childProfiles) {
-            //get children of the authenticated user
+            //children of the authenticated user
             const children = childProfiles.filter(child => child.parentId === currentUser.id);
             setUserChildren(children);
         }
-    }, [currentUser, childProfiles, navigate]);
+    }, [currentUser, childProfiles]);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p style={{ color: "red" }}>An error occurred: {error}</p>;
+       
 
     return (
         <div style={styles.container}>

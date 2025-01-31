@@ -4,14 +4,45 @@ import { useNavigate } from 'react-router-dom';
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError(null);
+    setLoading(true);
     console.log({ email, password });
-    
-    //redirect to user dashboard after successful login
-    navigate('/user');
+
+    try {
+      const response = fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = response.json();
+        console.error('Login Error:', errorText);
+        throw new Error(errorData.message || 'Oops! Something went wrong. Please try again later.');
+      }
+      const data = response.json();
+      console.log('Login Success:', data);
+
+      //store token in local storage
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      //redirect to user dashboard after successful login
+      navigate('/user');
+    } catch (error) {
+      setError(err.message);
+      console.error('Login Error:', error);
+    } finally {
+      setLoading(false);
+    }   
   };
 
   return (
@@ -24,6 +55,7 @@ const LoginPage = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           style={styles.input}
+          required
         />
         <input
           type="password"
@@ -31,8 +63,9 @@ const LoginPage = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           style={styles.input}
+          required
         />
-        <button type="submit" style={styles.button}>
+        <button type="submit" style={styles.button} disabled={loading}>
           Login
         </button>
       </form>
