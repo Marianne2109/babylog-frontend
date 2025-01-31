@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -9,6 +10,13 @@ const LoginPage = () => {
     console.log({ email, password });
   };
 
+  export default function Login() => {
+    let navigate = useNavigate();
+
+    const handleLogin = () => {
+      navigate('/dashboard');
+    }
+  }
   return (
     <div style={styles.container}>
       <h2>Login</h2>

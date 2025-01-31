@@ -14,4 +14,5 @@ export const UserAuthContextProvider = ({ children }) => {
     );
 };
 
+//hook to use user auth context
 export const useUserAuthContext = () => useContext(UserAuthContext);

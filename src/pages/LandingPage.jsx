@@ -44,8 +44,8 @@ const styles = {
     borderRadius: '5px',
   },
   logo: {
-    height: '200px',
-    marginBottom: '20px',
+    height: '300px',
+    marginBottom: '30px',
   },
 };
 
