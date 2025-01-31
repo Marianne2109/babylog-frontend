@@ -8,12 +8,12 @@ import { ChildContextProvider } from './contexts/ChildContext';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+   <BrowserRouter>
     <UserAuthContextProvider>
-      <ChildContextProvider>
-      <BrowserRouter>
+      <ChildContextProvider>      
         <App />
-      </BrowserRouter>
       </ChildContextProvider>
     </UserAuthContextProvider>
+   </BrowserRouter>
   </StrictMode>
 );

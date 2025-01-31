@@ -8,38 +8,58 @@ const LoginPage = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Login form submitted!");
     setError(null);
     setLoading(true);
-    console.log({ email, password });
+
 
     try {
       const response = fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
       });
 
-      if (!response.ok) {
-        const errorData = response.json();
-        console.error('Login Error:', errorText);
-        throw new Error(errorData.message || 'Oops! Something went wrong. Please try again later.');
-      }
-      const data = response.json();
-      console.log('Login Success:', data);
+      console.log("Response received:", response);
 
-      //store token in local storage
+      //check if response is valid json
+      let data;
+      try{
+        data = await response.json();
+      } catch (jsonError) {
+        console.error("Response is not json:", jsonError);
+        throw new Error("Unexpected response from server. Check backend.");
+      }
+
+      //check for errors in api
+      if (!response.ok) {
+        console.error('Login Error:', data);
+        throw new Error(data.message || 'Oops! Something went wrong. Please try again later.');
+      }
+
+      console.log("Backend response:", data);
+
+      // if (!response.ok) {
+      //   const errorData = response.json();
+      //   console.error('Login Error:', errorText);
+      //   throw new Error(errorData.message || 'Oops! Something went wrong. Please try again later.');
+      // }
+   
+
+      //store token in local storage for authentication
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
 
-      //redirect to user dashboard after successful login
-      navigate('/user');
+      console.log("User authenticated! Redirecting to user dashboard...");
+      navigate("/user"); //redirect to user dashboard after successful login
+
     } catch (error) {
-      setError(err.message);
-      console.error('Login Error:', error);
+      console.error("Login failed:", error.message);
+      setError("Failed to connect to the server. Check your backend and try again later.");
     } finally {
       setLoading(false);
     }   

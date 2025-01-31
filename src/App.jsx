@@ -8,10 +8,10 @@ import './App.css';
 
 
 function App() {
-  const [count, setCount] = useState(0);
+  
   useEffect(() => {
     console.log('Hello BabyLog');
-    console.log(import.meta.env.VITE_API_URL);
+    console.log("API URL:", import.meta.env.VITE_API_URL);
   }, []);
 
   return (
