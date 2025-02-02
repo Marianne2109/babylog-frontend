@@ -5,18 +5,24 @@ const UserAuthContext = createContext();
 
 //context provider
 export const UserAuthContextProvider = ({ children }) => {
-    const [currentUser, setCurrentUser] = useState(null);
-
-    useEffect(() => {
+    const [currentUser, setCurrentUser] = useState(() => {
         const storedUser = localStorage.getItem('user');
         const storedToken = localStorage.getItem('token');
-        if (storedUser && storedToken) {
-            setCurrentUser({ ...JSON.parse(storedUser), jwt: storedToken });
-        }
+        return storedUser && storedToken ? { ...JSON.parse(storedUser), jwt: storedToken } : null;
+    });
+    const [loadingAuth, setLoadingAuth] = useState(false);
+
+    useEffect(() => {
+        // const storedUser = localStorage.getItem('user');
+        // const storedToken = localStorage.getItem('token');
+        // if (storedUser && storedToken) {
+        //     setCurrentUser({ ...JSON.parse(storedUser), jwt: storedToken });
+        // }
+        setLoadingAuth(false);
     }, []);
 
     return (
-        <UserAuthContext.Provider value={{currentUser, setCurrentUser}}>
+        <UserAuthContext.Provider value={{currentUser, setCurrentUser, loadingAuth }}>
             {children}
         </UserAuthContext.Provider>
     );

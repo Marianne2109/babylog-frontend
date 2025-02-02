@@ -5,7 +5,7 @@ import { useChildContext } from "../contexts/ChildContext";
 
 export default function UserDashboard() {
     const navigate = useNavigate();
-    const { currentUser } = useUserAuthContext(); //authenticated user
+    const { currentUser, loadingAuth } = useUserAuthContext(); //authenticated user
     const {childProfiles, setChildProfiles} = useChildContext(); //child profiles and users with access
 
     const [userChildren, setUserChildren] = useState([]); //children profiles of the authenticated user
@@ -13,44 +13,47 @@ export default function UserDashboard() {
     const [error, setError] = useState(null);
     
     useEffect(() => {
-        if (!currentUser) {
-            navigate('/login'); //redirect to login if user is not authenticated
-            return;
+        if (!loadingAuth && !currentUser) {
+            navigate('/auth/login'); //redirect to login if user is not authenticated
         }
-        
+    }, [currentUser, loadingAuth, navigate]);
+       
+    useEffect(() => {
         //fetch from backend
-        const fetchChildren = async () => {
-            try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/children`, {
-                    method: 'GET',
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${currentUser.jwt}`,   
-                    },
-                });
+      const fetchChildren = async () => {
+         try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/child`, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${currentUser.jwt}`,   
+                },
+        });
 
-                if(!response.ok) {
-                    throw new Error("An error occurred while fetching child profiles.");
-                }
-
-                const data = await response.json();
-                setChildProfiles(data); 
-            } catch (error) {
-                console.error("Error fetching child profiles:", error);
-                setError(error.message);
-            } finally {
-                setLoading(false);
+            if(!response.ok) {
+                throw new Error("An error occurred while fetching child profiles.");
             }
+
+            const data = await response.json();
+            setChildProfiles(data); 
+         } catch (error) {
+            console.error("Error fetching child profiles:", error);
+            setError(error.message);
+         } finally {
+            setLoading(false);
+        }
         };
 
-        fetchChildren();
+        if (currentUser) { 
+           fetchChildren();
+        }
     }, [currentUser, navigate, setChildProfiles]);
 
     useEffect(() => {
         
         if (currentUser && childProfiles) {
             //children of the authenticated user
-            const children = childProfiles.filter(child => child.parentId === currentUser.id);
+            const children = childProfiles.filter(child => String(child.createdBy._id) === String(currentUser.id));
             setUserChildren(children);
         }
     }, [currentUser, childProfiles]);

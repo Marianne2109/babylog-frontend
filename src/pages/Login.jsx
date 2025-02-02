@@ -7,7 +7,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { setCurrentUser } = useUserAuthContext();
+  const { currentUser, setCurrentUser } = useUserAuthContext();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -49,14 +49,6 @@ const LoginPage = () => {
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
 
-      const userFromBackend = data.user;
-      const currentUser = { 
-        id: userFromBackend._id,
-        firstName: userFromBackend.firstName,
-        lastName: userFromBackend.lastName,
-        name: `${userFromBackend.firstName} ${userFromBackend.lastName}`,
-        jwt: data.token 
-      };
       //update user context 
       setCurrentUser(currentUser);
 
