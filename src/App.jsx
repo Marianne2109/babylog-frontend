@@ -17,8 +17,8 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/auth/login" element={<LoginPage />} />
+      <Route path="/auth/register" element={<RegisterPage />} />
       <Route path="/user" element={<UserDashboard />} />
       <Route path="*" element={<div>Page Not Found</div>} />
     </Routes>

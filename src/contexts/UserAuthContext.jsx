@@ -1,14 +1,22 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 //create auth context
 const UserAuthContext = createContext();
 
 //context provider
 export const UserAuthContextProvider = ({ children }) => {
-    const [userJwt, setUserJwt] = useState(null);
+    const [currentUser, setCurrentUser] = useState(null);
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        const storedToken = localStorage.getItem('token');
+        if (storedUser && storedToken) {
+            setCurrentUser({ ...JSON.parse(storedUser), jwt: storedToken });
+        }
+    }, []);
 
     return (
-        <UserAuthContext.Provider value={[userJwt, setUserJwt]}>
+        <UserAuthContext.Provider value={{currentUser, setCurrentUser}}>
             {children}
         </UserAuthContext.Provider>
     );

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUserAuthContext } from '../contexts/UserAuthContext';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { setCurrentUser } = useUserAuthContext();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -14,9 +16,10 @@ const LoginPage = () => {
     setError(null);
     setLoading(true);
 
-
     try {
-      const response = fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+      console.log("Sending login request...");
+
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,6 +28,12 @@ const LoginPage = () => {
       });
 
       console.log("Response received:", response);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Backend Error:", errorText);
+        throw new Error(`Error ${response.status}: ${errorText}`);
+      }
 
       //check if response is valid json
       let data;
@@ -35,28 +44,24 @@ const LoginPage = () => {
         throw new Error("Unexpected response from server. Check backend.");
       }
 
-      //check for errors in api
-      if (!response.ok) {
-        console.error('Login Error:', data);
-        throw new Error(data.message || 'Oops! Something went wrong. Please try again later.');
-      }
 
-      console.log("Backend response:", data);
-
-      // if (!response.ok) {
-      //   const errorData = response.json();
-      //   console.error('Login Error:', errorText);
-      //   throw new Error(errorData.message || 'Oops! Something went wrong. Please try again later.');
-      // }
-   
-
-      //store token in local storage for authentication
+      //store token and user in local storage for authentication
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
 
+      const userFromBackend = data.user;
+      const currentUser = { 
+        id: userFromBackend._id,
+        firstName: userFromBackend.firstName,
+        lastName: userFromBackend.lastName,
+        name: `${userFromBackend.firstName} ${userFromBackend.lastName}`,
+        jwt: data.token 
+      };
+      //update user context 
+      setCurrentUser(currentUser);
+
       console.log("User authenticated! Redirecting to user dashboard...");
       navigate("/user"); //redirect to user dashboard after successful login
-
     } catch (error) {
       console.error("Login failed:", error.message);
       setError("Failed to connect to the server. Check your backend and try again later.");
@@ -89,6 +94,7 @@ const LoginPage = () => {
           Login
         </button>
       </form>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
 };

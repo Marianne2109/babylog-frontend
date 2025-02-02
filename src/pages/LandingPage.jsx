@@ -16,10 +16,10 @@ const LandingPage = () => {
       <h1>Welcome to BabyLog</h1>
       
       <div style={styles.linkContainer}>
-        <Link to="/register" style={styles.link}>
+        <Link to="/auth/register" style={styles.link}>
         Sign Up
         </Link>
-        <Link to="/login" style={styles.link}>
+        <Link to="/auth/login" style={styles.link}>
         Login
         </Link>
       </div>

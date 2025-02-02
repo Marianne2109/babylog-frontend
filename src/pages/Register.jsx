@@ -30,7 +30,8 @@ const RegisterPage = () => {
     setLoading(true);
 
     try{
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/register`, {
+      console.log("Sending registration request...");
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
         method: 'POST', 
         headers: {
           'Content-Type': 'application/json',
@@ -38,10 +39,12 @@ const RegisterPage = () => {
         body: JSON.stringify(formData),
       });
 
+      console.log("Response status:", response.status);
+
       if (!response.ok) {
-        const errorText = await response.json();
-        console.error("Error Response:", errorText);
-        throw new Error("Oops! Something went wrong. Please try again later.");
+        const errorData = await response.text();
+        console.error("Server Error:", errorData);
+        throw new Error(`Registration failed: ${errorData}`);
       }
 
       const data = await response.json();
@@ -55,7 +58,7 @@ const RegisterPage = () => {
       //redirect to login page after successful registration
       setSuccess('User registered successfully! Redirecting to login page...');
       setTimeout(() => {
-        navigate('/login'); //redirect to login page after 2 seconds
+        navigate('/auth/login'); //redirect to login page after 2 seconds
       }, 2000); 
 
     } catch (error) {
@@ -106,7 +109,7 @@ const RegisterPage = () => {
           style={styles.input}
           required
         />
-        <button type="submit" style={styles.button}>
+        <button type="submit" style={styles.button} disabled={loading}>
           Sign Up
         </button>
       </form>

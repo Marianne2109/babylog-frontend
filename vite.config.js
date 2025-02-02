@@ -9,6 +9,11 @@ export default defineConfig({
       src: '/src',
     }
   },
+  server: {
+    proxy: {
+      '/auth': 'http://127.0.0.1:3000', // Proxy /auth calls to backend
+    },
+  },
   test: {
     globals: true,
     environment: "jsdom",

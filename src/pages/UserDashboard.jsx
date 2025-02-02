@@ -61,7 +61,7 @@ export default function UserDashboard() {
 
     return (
         <div style={styles.container}>
-            <h2 style={styles.heading}>Hello, {currentUser?.name}</h2>
+            <h2 style={styles.heading}>Hello, {currentUser?.firstName} {currentUser?.lastName} </h2>
 
             <button style={styles.addButton} onClick={() => navigate('/add-child')}>
                 + Add a new child profile
